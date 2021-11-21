@@ -23,5 +23,7 @@ app.register_blueprint(users_app)
 def ping():
     return 'pong'
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+
+def run():
+    if __name__ == '__main__':
+        app.run(host='0.0.0.0')
