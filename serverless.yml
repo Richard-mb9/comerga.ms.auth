@@ -42,8 +42,8 @@ package:
 
 
 functions:
-  handler:
-    name: handler
+  auth:
+    name: auth
     handler: handler.handler
     description: test-lambda
     timeout: 10 # seconds
