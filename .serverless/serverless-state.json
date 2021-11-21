@@ -84,10 +84,10 @@
               }
             }
           },
-          "HelloLogGroup": {
+          "HandlerLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/users-dev-hello"
+              "LogGroupName": "/aws/lambda/handler"
             }
           },
           "IamRoleLambdaExecution": {
@@ -132,7 +132,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/users-dev*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/handler:*"
                           }
                         ]
                       },
@@ -143,7 +143,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/users-dev*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/handler:*:*"
                           }
                         ]
                       }
@@ -167,20 +167,21 @@
               }
             }
           },
-          "HelloLambdaFunction": {
+          "HandlerLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/users/dev/1637510019321-2021-11-21T15:53:39.321Z/users.zip"
+                "S3Key": "serverless/users/dev/1637517333295-2021-11-21T17:55:33.295Z/handler.zip"
               },
-              "Handler": "handler.hello",
+              "Handler": "handler.handler",
               "Runtime": "python3.8",
-              "FunctionName": "users-dev-hello",
-              "MemorySize": 1024,
-              "Timeout": 6,
+              "FunctionName": "handler",
+              "MemorySize": 128,
+              "Timeout": 10,
+              "Description": "test-lambda",
               "Role": {
                 "Fn::GetAtt": [
                   "IamRoleLambdaExecution",
@@ -189,17 +190,18 @@
               }
             },
             "DependsOn": [
-              "HelloLogGroup"
+              "HandlerLogGroup"
             ]
           },
-          "HelloLambdaVersionyMSNYyfhcf3zAgCeY6pVjzii8gUCBcJz7FCjemEi20": {
+          "HandlerLambdaVersionenAwFJz088D0dT172Uuteb02YWCrQ7PvsS9DUKoAqxs": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
-                "Ref": "HelloLambdaFunction"
+                "Ref": "HandlerLambdaFunction"
               },
-              "CodeSha256": "GxisNIxzdjEUV9FIL03kH6YlNUlPjtl+OE/65z4xENA="
+              "CodeSha256": "z96XSm5spCtUKWVw/e7fxPo4kYQbSsfo1cKA2Upg4Zo=",
+              "Description": "test-lambda"
             }
           }
         },
@@ -212,13 +214,13 @@
               "Name": "sls-users-dev-ServerlessDeploymentBucketName"
             }
           },
-          "HelloLambdaFunctionQualifiedArn": {
+          "HandlerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "HelloLambdaVersionyMSNYyfhcf3zAgCeY6pVjzii8gUCBcJz7FCjemEi20"
+              "Ref": "HandlerLambdaVersionenAwFJz088D0dT172Uuteb02YWCrQ7PvsS9DUKoAqxs"
             },
             "Export": {
-              "Name": "sls-users-dev-HelloLambdaFunctionQualifiedArn"
+              "Name": "sls-users-dev-HandlerLambdaFunctionQualifiedArn"
             }
           }
         }
@@ -307,24 +309,46 @@
       },
       "vpc": {}
     },
+    "custom": {
+      "wsgi": {
+        "app": "app.app"
+      }
+    },
+    "plugins": [
+      "serverless-python-requirements",
+      "serverless-wsgi"
+    ],
     "pluginsData": {},
     "functions": {
-      "hello": {
-        "handler": "handler.hello",
-        "events": [
-          {
-            "path": "/",
-            "method": "get",
-            "http": null
-          }
-        ],
-        "name": "users-dev-hello",
-        "package": {},
-        "memory": 1024,
-        "timeout": 6,
+      "handler": {
+        "name": "handler",
+        "handler": "handler.handler",
+        "description": "test-lambda",
+        "timeout": 10,
+        "memorySize": 128,
+        "package": {
+          "patterns": [
+            "!node_modules/**",
+            "!yarn.lock",
+            "!package-lock.json",
+            "!package.json"
+          ],
+          "artifact": "/home/richard/src/cmg/users/.serverless/handler.zip"
+        },
+        "api": {
+          "handler": "wsgi_handler.handler",
+          "events": [
+            {
+              "http": "ANY /"
+            }
+          ]
+        },
+        "events": [],
+        "module": ".",
+        "memory": 128,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "HelloLambdaVersionyMSNYyfhcf3zAgCeY6pVjzii8gUCBcJz7FCjemEi20"
+        "versionLogicalId": "HandlerLambdaVersionenAwFJz088D0dT172Uuteb02YWCrQ7PvsS9DUKoAqxs"
       }
     },
     "configValidationMode": "warn",
@@ -337,16 +361,32 @@
       "provider": {
         "$ref": "$[\"service\"][\"provider\"]"
       },
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
+      "package": {
+        "individually": true,
+        "include": [
+          "wsgi_handler.py",
+          "serverless_wsgi.py",
+          ".serverless-wsgi"
+        ],
+        "exclude": [],
+        "artifactDirectoryName": "serverless/users/dev/1637517333295-2021-11-21T17:55:33.295Z"
+      },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
+      },
+      "custom": {
+        "$ref": "$[\"service\"][\"custom\"]"
       }
     },
     "layers": {},
-    "isDashboardMonitoringPreconfigured": false,
-    "artifact": "/home/richard/src/cmg/users/.serverless/users.zip"
+    "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/users/dev/1637510019321-2021-11-21T15:53:39.321Z",
-    "artifact": "users.zip"
+    "individually": true,
+    "artifactDirectoryName": "serverless/users/dev/1637517333295-2021-11-21T17:55:33.295Z",
+    "artifact": ""
   }
 }

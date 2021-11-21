@@ -39,12 +39,10 @@ package:
 #    - include-me.py
 #    - include-me-dir/**
 
-custom:
-  wsgi:
-    app: app.app
+
 
 functions:
-  hello:
+  handler:
     name: handler
     handler: handler.handler
     description: test-lambda
@@ -60,6 +58,11 @@ functions:
       handler: wsgi_handler.handler
       events:
       - http: ANY /
+      - http: ANY {proxy+}
+
+custom:
+  wsgi:
+    app: app.app
 #    events:
 #    - http:
 #      path: /
