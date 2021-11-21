@@ -55,7 +55,7 @@ functions:
         - "!package-lock.json"
         - "!package.json"
     api:
-      handler: wsgi_handler.handler
+      handler: wsgi.handler
       events:
       - http: ANY /
       - http: ANY {proxy+}
