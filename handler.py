@@ -1,7 +1,7 @@
 import json
 
 
-def hello(event, context):
+def handler(event, context):
     body = {
         "message": "esta no ar",
     }
