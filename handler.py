@@ -4,8 +4,8 @@ from flask_lambda import FlaskLambda
 
 app = FlaskLambda(__name__)
 
-@app.route("/auth")
-def handler(event, context):
+@app.route("/auth", methods=['GET', 'POST'])
+def handler():
     body = {
         "message": "esta no ar",
     }
@@ -16,3 +16,7 @@ def handler(event, context):
     }
 
     return response
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
