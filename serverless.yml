@@ -45,9 +45,9 @@ functions:
   auth:
     name: auth
     handler: wsgi.handler
-      events:
-      - http: ANY /
-      - http: ANY {proxy+}
+    events:
+    - http: ANY /
+    - http: ANY {proxy+}
     #handler: handler.handler
     description: test-lambda
     timeout: 10 # seconds
