@@ -1,4 +1,14 @@
-from app import run
+import json
+
 
 def hello(event, context):
-    run()
+    body = {
+        "message": "esta no ar",
+    }
+
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(body)
+    }
+
+    return response

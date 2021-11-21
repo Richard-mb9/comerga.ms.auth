@@ -30,30 +30,7 @@ provider:
 
 plugins:
   - serverless-python-requirements
-
-# you can add statements to the Lambda function's IAM Role here
-#  iam:
-#    role:
-#      statements:
-#        - Effect: "Allow"
-#          Action:
-#            - "s3:ListBucket"
-#          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#        - Effect: "Allow"
-#          Action:
-#            - "s3:PutObject"
-#          Resource:
-#            Fn::Join:
-#              - ""
-#              - - "arn:aws:s3:::"
-#                - "Ref" : "ServerlessDeploymentBucket"
-#                - "/*"
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
+  - serverless-wsgi
 package:
   individually: true
 #  patterns:
@@ -62,10 +39,14 @@ package:
 #    - include-me.py
 #    - include-me-dir/**
 
+custom:
+  wsgi:
+    app: app.app
+
 functions:
   hello:
-    name: hello
-    handler: handler.hello
+    name: handler
+    handler: handler.handler
     description: test-lambda
     timeout: 10 # seconds
     memorySize: 128 #mb
@@ -75,6 +56,8 @@ functions:
         - "!yarn.lock"
         - "!package-lock.json"
         - "!package.json"
+    api:
+      handler: wsgi_handler.handler
 #    events:
 #    - http:
 #      path: /
