@@ -1,0 +1,25 @@
+{
+  "name": "users",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "serverless-python-requirements": "^5.2.0",
+    "serverless-wsgi": "^2.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Richard-mb9/comerga.ms.auth.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Richard-mb9/comerga.ms.auth/issues"
+  },
+  "homepage": "https://github.com/Richard-mb9/comerga.ms.auth#readme"
+}

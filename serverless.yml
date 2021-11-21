@@ -58,6 +58,8 @@ functions:
         - "!package.json"
     api:
       handler: wsgi_handler.handler
+      events:
+      - http: ANY /
 #    events:
 #    - http:
 #      path: /
