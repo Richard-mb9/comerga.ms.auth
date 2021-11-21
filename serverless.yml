@@ -44,7 +44,11 @@ package:
 functions:
   auth:
     name: auth
-    handler: handler.handler
+    handler: wsgi.handler
+      events:
+      - http: ANY /
+      - http: ANY {proxy+}
+    #handler: handler.handler
     description: test-lambda
     timeout: 10 # seconds
     memorySize: 128 #mb
@@ -54,15 +58,16 @@ functions:
         - "!yarn.lock"
         - "!package-lock.json"
         - "!package.json"
-    api:
-      handler: wsgi.handler
-      events:
-      - http: ANY /
-      - http: ANY {proxy+}
+    #api:
+    #  handler: wsgi.handler
+    #  events:
+    #  - http: ANY /
+    #  - http: ANY {proxy+}
 
 custom:
   wsgi:
     app: app.app
+    packRequirements: false
 #    events:
 #    - http:
 #      path: /
